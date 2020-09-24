@@ -12,11 +12,7 @@ var client
 //var domainUrl = "http://localhost:4200/";
 if (config.type == 'DEVELOPMENT') {
      client = new MongoClient(config.DBSERVERURLDEV);
-} else if (config.type == 'TESTING') {
-   client = new MongoClient(config.DBSERVERURLTEST);
-}
-
-
+} 
 
 
 var open = function () {

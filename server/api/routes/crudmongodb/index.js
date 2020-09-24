@@ -40,14 +40,6 @@ router
   .route('/retrieveAll')
   .post(ctrlCrud.retrieveAll);
 
-//---------------------------------------------------------------
-// retrive all screenbuilder
-//---------------------------------------------------------------
-
-router
-.route('/retrieveAllScreenbuilder')
-.post(ctrlCrud.retrieveAllScreenbuilder);  
-
 
 //---------------------------------------------------------------
 // retrive data by key
@@ -57,12 +49,4 @@ router
   .route('/retrieveOne')
   .post(ctrlCrud.retrieveOne);
 
-//---------------------------------------------------------------
-// add embedded data
-//---------------------------------------------------------------
-
-router
-  .route('/addEmbedData')
-  .post(ctrlCrud.addEmbedData);
-  
 module.exports = router;

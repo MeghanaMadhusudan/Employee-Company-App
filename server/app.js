@@ -23,7 +23,6 @@ require('./api/data/mongonative-connection.js').open()
 var appRoutes = require('./api/routes/app');
 var appEmployee = require('./api/routes/employee');
 var appCompany = require('./api/routes/company');
-// var appLogin = require('./api/routes/login');
 var appLogin = require('./api/routes/login');
 
 

@@ -28,15 +28,11 @@ module.exports.createEmployeeData = function(req, res){
 
       mongodbCrud.retrieveAll(companyParams, function (retrieveRes) {
         if (retrieveRes.response.length > 0) {
-          console.log("retrieveRes", JSON.stringify(retrieveRes))
           var filterRecord = retrieveRes.response.filter(function(eachData){
-            console.log("eachData", JSON.stringify(eachData))
-            console.log("jsonObj.companyId == eachData.companyId)", jsonObj.companyId == eachData.companyId)
             if(jsonObj.companyId == eachData.companyId){
               return eachData;
             } 
           });
-          console.log("filterRecoed", JSON.stringify(filterRecord))
           if(filterRecord.length > 0){
             //if(retrieveRes.response.length -1 == index){
               callback(null, filterRecord[0])
@@ -50,31 +46,23 @@ module.exports.createEmployeeData = function(req, res){
       });
     },
     function(filteredCompanyRecord, callback){
-      console.log("filteredCompanyRecord", JSON.stringify(filteredCompanyRecord))
       var employeeParams = {
         "db": dbName,
         "collectionName": "employee"
       }
       mongodbCrud.retrieveAll(employeeParams, function (retrieveRes) {
         if (retrieveRes.response.length > 0) {
-          console.log("retrieveRes", JSON.stringify(retrieveRes))
           var filterRecord = retrieveRes.response.filter(function(eachData){
-            console.log("eachData", JSON.stringify(eachData))
-            console.log("jsonObj.employeeEmailId == eachData.employeeEmailId)", jsonObj.employeeEmailId == eachData.employeeEmailId)
-           
-            console.log("each data of company id", eachData.companyId)
             if(jsonObj.employeeEmailId == eachData.employeeEmailId){
               return eachData;
             } 
           });
-          console.log("filterRecoed", JSON.stringify(filterRecord))
           if(filterRecord.length > 0){
             returnData.code = 200;
             returnData.message = "Email exists"
             callback(200, returnData)
           } else {
            // if(eachData.companyId == jsonObj.companyId){
-
             returnData.data = jsonObj;
             callback(null, returnData)
           }
@@ -85,7 +73,6 @@ module.exports.createEmployeeData = function(req, res){
       });
     },
     function(employeeData,callback){
-      console.log("data", JSON.stringify(employeeData))
       var empObj = {};
       companyParams = {
         "db": dbName,
@@ -94,20 +81,12 @@ module.exports.createEmployeeData = function(req, res){
      }
 
      mongodbCrud.retrieveOne(companyParams, function (retrieveRes) { 
-      console.log("personRes", retrieveRes)
       if(retrieveRes.response.length > 0){
       retrieveRes.response.forEach(function(value, index){
-        console.log("value.employeeRM ", value.employeeRM )
-        console.log("jsonObj.employeeRM", jsonObj.employeeRM )
-        console.log("value.employeeRM == jsonObj.employeeRM",value.employeeRM == jsonObj.employeeRM )
-
-
         // if(value.employeeId == jsonObj.employeeRM || jsonObj.employeeRM == null){
           if(value.employeeId == jsonObj.employeeRM && value.companyId ==  jsonObj.companyId || jsonObj.employeeRM == null){
-          console.log("value in present", JSON.stringify(value))
           empObj.data = value
         } else {
-          console.log("coming to else --")
           empObj.message = "No employee found in the company"
         }
         if(retrieveRes.response.length -1 == index){
@@ -115,20 +94,13 @@ module.exports.createEmployeeData = function(req, res){
         }
       })
     } else{
-
-      console.log("coming to 2nd else")
       callback(null,employeeData)
       }
      });
     },
     function(filteredEmployeeData,callback){
       
-      console.log("filteredEmployeeData", JSON.stringify(filteredEmployeeData))
       if(filteredEmployeeData.data){
-        // var employeeManager;
-        // if(!jsonObj.employeeRM){
-        //   employeeManager = 
-        // }
             var companyDataParams = {
               "db": dbName,
               "collectionName": "employee",
@@ -147,12 +119,8 @@ module.exports.createEmployeeData = function(req, res){
             companyDataParams.createData.employeeRM = companyDataParams.createData.employeeId
           }
 
-          console.log("companyDataParams", companyDataParams)
-
           mongodbCrud.createData(companyDataParams, function (createDataRes) {
-            console.log("User response : " +JSON.stringify(createDataRes));
             if (createDataRes.status == 200) {
-              console.log("insidee if------")
               returnData.code = 200;
               returnData.message = "Successfully created data in table company!";
               returnData.error = 'NA';
@@ -179,10 +147,6 @@ module.exports.createEmployeeData = function(req, res){
 
   ],
   function (err, result) {
-
-    console.log("err", JSON.stringify(err))
-    console.log("result", JSON.stringify(result))
-
     if (req.body) {
         res
             .status(200)
@@ -204,9 +168,6 @@ module.exports.updateEmployeeData =  function(req, res){
       jsonObj = req;
   }
 
-  var currentDate =  moment().format('DD-MM-YYYY');
-
-
   async.waterfall([
     function(callback){
 
@@ -219,8 +180,6 @@ module.exports.updateEmployeeData =  function(req, res){
             "employeeRM": jsonObj.employeeRM
       }
     }
-
-     console.log("updateParams", updateParams)
 
      mongodbCrud.updateData(updateParams, function (updateDataRes) {
       // console.log("User response : " +JSON.stringify(usersRes.data[0]._id));
@@ -262,8 +221,6 @@ module.exports.deleteEmployeeData =  function(req, res){
       jsonObj = req;
   }
 
-  var currentDate =  moment().format('DD-MM-YYYY');
-
   async.waterfall([
     function(callback){
 
@@ -274,11 +231,8 @@ module.exports.deleteEmployeeData =  function(req, res){
       var empArray= [];
     
       mongodbCrud.retrieveAll(employeeParams, function (retrieveRes) {
-        console.log("retrieveRes", JSON.stringify(retrieveRes))
         retrieveRes.response.forEach(function(eachData, index){
-          console.log("eachData", JSON.stringify(eachData))
           if(eachData.employeeRM ==  jsonObj.employeeId){
-            console.log("in condition", JSON.stringify(eachData))
             empArray.push(eachData);
           }
           if(empArray.length > 0){
@@ -296,7 +250,6 @@ module.exports.deleteEmployeeData =  function(req, res){
       });
     },
     function(empData,callback){
-      console.log("empData", JSON.stringify(empData))
       empData.forEach(function(eachEmp,index){
         var updateParams = {
           "db": dbName,
@@ -306,9 +259,7 @@ module.exports.deleteEmployeeData =  function(req, res){
               "employeeRM": null
         }
       }
-      console.log("updateParams", updateParams)
         mongodbCrud.updateData(updateParams, function (updateDataRes) {
-          console.log("updateDataRes in delete", JSON.stringify(updateDataRes))
           if(empData.length -1 == index){
           callback(null);
           }
@@ -322,8 +273,6 @@ module.exports.deleteEmployeeData =  function(req, res){
         "collectionName": "employee",
         "pkId": jsonObj.id,
       }
-
-     console.log("deleteParams", deleteParams)
 
      mongodbCrud.deleteData(deleteParams, function (deleteDataRes) {
       // console.log("User response : " +JSON.stringify(usersRes.data[0]._id));
@@ -371,13 +320,10 @@ module.exports.searchEmployee = function(req,res){
         "db": dbName,
         "collectionName": "employee",
       }
-      console.log("employeeParams", employeeParams)
       var empData = [];
       mongodbCrud.retrieveAll(employeeParams, function (retrieveRes) {
         retrieveRes.response.forEach(function(eachData, index){
-          console.log("eachData", JSON.stringify(eachData))
           if(eachData.employeeContact == jsonObj.employeeContact || eachData.employeeName == jsonObj.employeeName || eachData.employeeId == jsonObj.employeeId){
-            console.log("inside data", JSON.stringify(eachData));
             empData.push(eachData);
           }
 
@@ -423,19 +369,14 @@ module.exports.getEmployeeDataById =  function(req, res){
         "db": dbName,
         "collectionName": "employee",
       }
-      console.log("employeeParams", employeeParams)
       var employeeManager = {};
       var subordinate = [];
       mongodbCrud.retrieveAll(employeeParams, function (retrieveRes) {
         retrieveRes.response.forEach(function(eachData, index){
-          console.log("eachData", JSON.stringify(eachData))
           if(eachData.employeeId == jsonObj.employeeId){
-            console.log("inside data", JSON.stringify(eachData.employeeRM));
             employeeManager = eachData.employeeRM; 
-            console.log("employeeManager", JSON.stringify(employeeManager))
           } 
           if(eachData.employeeRM == jsonObj.employeeId){
-            console.log("coming to 2sn else", eachData.employeeId)
             subordinate.push(eachData.employeeId);
           }
           if( retrieveRes.response.length - 1 == index){

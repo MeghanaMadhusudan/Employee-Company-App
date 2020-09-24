@@ -20,8 +20,6 @@ module.exports.createCompanyData = function(req, res){
   var currentDate =  moment().format('DD-MM-YYYY');
 
 
-  console.log("coming inside")
-
   async.waterfall([
     function(callback){
       companyParams = {
@@ -31,12 +29,9 @@ module.exports.createCompanyData = function(req, res){
 
      mongodbCrud.retrieveAll(companyParams, function (retrieveRes) {
       if (retrieveRes.response.length > 0) {
-        console.log("retrieveRes", JSON.stringify(retrieveRes))
         retrieveRes.response.forEach(function(eachData, index){
           var existingCName = eachData.companyName.toLowerCase();
-          console.log("existingCName", existingCName);
           var newCName = jsonObj.companyName.toLowerCase();
-          console.log("newCName", newCName);
           if(existingCName == newCName){
             returnData.code = 400;
             returnData.message = "Company already exists";
@@ -72,10 +67,7 @@ module.exports.createCompanyData = function(req, res){
         }
      }
 
-     console.log("companyDataParams", companyDataParams)
-
      mongodbCrud.createData(companyDataParams, function (createDataRes) {
-      // console.log("User response : " +JSON.stringify(usersRes.data[0]._id));
       if (createDataRes.status == 200) {
         returnData.code = 200;
         returnData.message = "Successfully created data in table company!";
@@ -134,8 +126,6 @@ module.exports.updateCompanyData =  function(req, res){
         }
      }
 
-     console.log("updateParams", updateParams)
-
      mongodbCrud.updateData(updateParams, function (updateDataRes) {
       // console.log("User response : " +JSON.stringify(usersRes.data[0]._id));
       if (updateDataRes.status == 200) {
@@ -176,9 +166,6 @@ module.exports.deleteCompanyData =  function(req, res){
       jsonObj = req;
   }
 
-  var currentDate =  moment().format('DD-MM-YYYY');
-
-
   async.waterfall([
     function(callback){
 
@@ -187,8 +174,6 @@ module.exports.deleteCompanyData =  function(req, res){
         "collectionName": "company",
         "pkId": jsonObj.id,
       }
-
-     console.log("deleteParams", deleteParams)
 
      mongodbCrud.deleteData(deleteParams, function (deleteDataRes) {
       // console.log("User response : " +JSON.stringify(usersRes.data[0]._id));
